@@ -2,6 +2,8 @@
 
 #define MAIN_H
 
-#include <stdio.h>
+#include <iostream>
+
+using namespace std;
 
 #endif
