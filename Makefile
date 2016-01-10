@@ -5,7 +5,7 @@ RM = rm -rf
 all: main
 
 main: main.cpp main.hpp
-	$(CC) $(CCOPT) -c $< -o $@
+	$(CC) $(CCOPT) $< -o $@
 
 %.o: %.cpp %.hpp
 	$(CC) $(CCOPT) -c $< -o $@
