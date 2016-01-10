@@ -48,7 +48,12 @@ int main(int argc, char** argv) {
   cout << "Board file:\t" << opts.board_config << endl;
 
   // Generate board and start playing
-  Board bd(opts.board_config);
+  rapidjson::Document d = get_config_from_file(opts.board_config);
+  string board_name(d["board_name"].GetString());
+  int width = d["board_width"].GetInt();
+  int height = d["board_height"].GetInt();
+  rapidjson::Value& mods(d["modifiers"]);
+  Board bd(board_name, width, height, mods);
 
   return 0;
 
@@ -86,4 +91,21 @@ void usage(void) {
   cout << " -- Not to be used with '-g'" << endl;
   cout << "\t" << "-g" << "\t:\t" << "Game being played (Scrabble|WordsWFriends)";
   cout << " -- Not to be used with '-b'" << endl;
+}
+
+rapidjson::Document get_config_from_file(string& config) {
+  ifstream config_file(config);
+
+  // get length of file:
+  config_file.seekg (0, config_file.end);
+  int length = config_file.tellg();
+  config_file.seekg (0, config_file.beg);
+  char* config_file_raw = new char[length];
+
+  config_file.read(config_file_raw, length);
+
+  rapidjson::Document d;
+  d.Parse(config_file_raw);
+
+  return d;
 }

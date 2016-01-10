@@ -25,5 +25,6 @@ void print_error(string err);
 void usage(void);
 bool check_options(options o);
 bool check_file_exists(string s, bool print_err = false);
+rapidjson::Document get_config_from_file(string& config);
 
 #endif

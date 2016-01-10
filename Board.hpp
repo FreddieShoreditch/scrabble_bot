@@ -12,6 +12,9 @@
 #include "submodules/rapidjson/include/rapidjson/writer.h"
 #include "submodules/rapidjson/include/rapidjson/stringbuffer.h"
 
+// Created libraries
+#include "BoardMarker.hpp"
+
 using namespace std;
 
 // Board has multiple configurations. The configuration is loaded
@@ -19,10 +22,13 @@ using namespace std;
 class Board {
 
   private:
-    vector<vector<int> > board;
+    vector<vector<BoardMarker*> > board;
+    string name;
+    int width;
+    int height;
 
   public:
-    Board(string& config);
+    Board(string& name, int& width, int& height, rapidjson::Value& mods);
 
 };
 
