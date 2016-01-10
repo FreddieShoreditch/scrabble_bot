@@ -5,7 +5,10 @@ RM = rm -rf
 all: main
 
 main: main.cpp main.hpp
-	$(CC) $(CCOPT) $< -o $@
+	$(CC) $(CCOPT) -c $< -o $@
+
+%.o: %.cpp %.hpp
+	$(CC) $(CCOPT) -c $< -o $@
 
 clean:
 	$(RM) main *.o *.hpp.gch
