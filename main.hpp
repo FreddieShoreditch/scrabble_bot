@@ -3,6 +3,7 @@
 #define MAIN_H
 
 #include <iostream>
+#include <fstream>
 
 // As per getopt example
 #include <ctype.h>

@@ -12,7 +12,13 @@ int main(int argc, char** argv) {
         if (!opts.game_played.empty()) {
           print_error("You cannot set both the board type and the game you're playing. Using game played as priority.");
         } else {
-          opts.board_config = optarg;
+          string opt(optarg);
+          opts.board_config = opt;
+          if (opt.compare("Scrabble") == 0) {
+            opts.board_config = "./board_configs/hasbro_scrabble.json";
+          } else if (opt.compare("WordsWFriends") == 0) {
+            opts.board_config = "./board_configs/words_with_friends.json";
+          }
         }
         break;
       case 'g':
@@ -32,8 +38,15 @@ int main(int argc, char** argv) {
     usage();
   }
 
+  ifstream file(opts.board_config);
+  bool config_exists_ = true;
+  if (!file) { config_exists_ = false; }
+
+  // Print configuration
   if (errors) { cout << endl; }
   cout << "Starting scrabble bot!..." << endl << endl;
+  cout << "Board file:\t" << opts.board_config << endl;
+  cout << "Board file exists:\t" << (config_exists_ ? "True" : "False") << endl;
 
   return 0;
 
