@@ -12,6 +12,13 @@
 
 using namespace std;
 
+typedef struct {
+  string board_config;
+  string game_played;
+} options;
+
 void print_error(string err);
+void usage(void);
+bool check_options(options o);
 
 #endif
