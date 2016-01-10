@@ -1,0 +1,19 @@
+{
+  "board_name": "Hasbro Scrabble",
+  "board_height": 15,
+  "board_width": 15,
+  "modifiers": {
+    "double_l": [
+
+    ],
+    "double_w": [
+
+    ],
+    "triple_l": [
+
+    ],
+    "triple_w": [
+
+    ]
+  }
+}
