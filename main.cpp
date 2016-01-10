@@ -39,14 +39,15 @@ int main(int argc, char** argv) {
   }
 
   ifstream file(opts.board_config);
-  bool config_exists_ = true;
-  if (!file) { config_exists_ = false; }
+  if (!file) {
+    print_error("Config file doesn't exist!");
+    exit(EXIT_FAILURE);
+  }
 
   // Print configuration
   if (errors) { cout << endl; }
   cout << "Starting scrabble bot!..." << endl << endl;
   cout << "Board file:\t" << opts.board_config << endl;
-  cout << "Board file exists:\t" << (config_exists_ ? "True" : "False") << endl;
 
   return 0;
 
