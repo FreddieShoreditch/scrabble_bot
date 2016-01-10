@@ -47,6 +47,9 @@ int main(int argc, char** argv) {
   cout << "Starting scrabble bot!..." << endl << endl;
   cout << "Board file:\t" << opts.board_config << endl;
 
+  // Generate board and start playing
+  Board bd(opts.board_config);
+
   return 0;
 
 }

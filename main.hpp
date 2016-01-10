@@ -11,6 +11,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// Created Libraries
+#include "Board.hpp"
+
 using namespace std;
 
 typedef struct {
@@ -21,5 +24,6 @@ typedef struct {
 void print_error(string err);
 void usage(void);
 bool check_options(options o);
+bool check_file_exists(string s, bool print_err = false);
 
 #endif
