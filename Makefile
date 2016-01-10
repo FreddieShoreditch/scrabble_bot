@@ -13,4 +13,4 @@ main: main.cpp main.hpp
 clean:
 	$(RM) main *.o *.hpp.gch
 
-.PHONY: all
+.PHONY: all clean
