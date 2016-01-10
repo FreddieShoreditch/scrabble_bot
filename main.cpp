@@ -38,11 +38,9 @@ int main(int argc, char** argv) {
     usage();
   }
 
-  ifstream file(opts.board_config);
-  if (!file) {
-    print_error("Config file doesn't exist!");
+  if (!check_file_exists(opts.board_config, true)) {
     exit(EXIT_FAILURE);
-  }
+  };
 
   // Print configuration
   if (errors) { cout << endl; }
@@ -67,6 +65,15 @@ bool check_options(options o) {
   valid &= !o.board_config.empty() || !o.game_played.empty();
 
   return valid;
+}
+
+bool check_file_exists(string s, bool print_err) {
+  ifstream file(s);
+  bool exists_ = (!file) ? false : true;
+  if (!exists_ && print_err) {
+    print_error("Config file doesn't exist!");
+  }
+  return exists_;
 }
 
 void usage(void) {
