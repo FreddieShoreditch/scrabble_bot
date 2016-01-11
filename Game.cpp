@@ -16,6 +16,7 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
 
   cout << "Players:\t" << this->players << endl;
   cout << "Your Go:\t" << this->this_player_go << endl;
+  cout << endl;
   cout << "Board:\t" << endl;
   this->b->print_board();
 }
