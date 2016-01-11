@@ -30,6 +30,7 @@ class Board {
     bool valid_position(int& w, int& h);
     bool set_char(char c, int w, int h);
     char get_char(int w, int h);
+    void print_line_row(void);
     vector<vector<BoardMarker*> > board;
     string name;
     int width;
@@ -39,7 +40,7 @@ class Board {
   public:
     Board(string& name, int& width, int& height,
       rapidjson::Value& mods, rapidjson::Value& scores);
-    void print_board(Board& b);
+    void print_board(void);
     bool set_word(string s, int w, int h, Direction d);
     string get_word(int w, int h, Direction d);
 
