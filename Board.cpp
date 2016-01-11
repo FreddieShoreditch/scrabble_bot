@@ -4,10 +4,16 @@ Board::Board(string& name_, int& width_, int& height_,
   rapidjson::Value& mods, rapidjson::Value& scores)
   : name(name_), width(width_), height(height_), scoring() {
   this->board.resize(width);
+  Modifier centre = CENTRE;
+
   for (size_t i = 0; i < this->board.size(); i++) {
     this->board[i].resize(height);
     for (int j = 0; j < width; j++) {
       this->board[i][j] = new BoardMarker();
+      if ((j == ceil(width / 2) || j == floor(width / 2)) &&
+          (i == ceil(height / 2) || i == floor(height / 2))) {
+            this->board[i][j]->apply_modifier(centre);
+          }
     }
   }
 

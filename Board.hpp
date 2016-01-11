@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <math.h>
 
 // Dependencies
 #include "submodules/rapidjson/include/rapidjson/document.h"
