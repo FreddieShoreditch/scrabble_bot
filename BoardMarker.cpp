@@ -23,12 +23,11 @@ char BoardMarker::get_char(void) {
 }
 
 void BoardMarker::print_marker(void) {
-  string pre = " ";
+  string pre = "";
   string col = "";
-  string post = " ";
+  string post = "";
   if (this->m != NONE) {
-    pre = " \033[";
-    post = "\033[0m ";
+    pre = "\033[0";
     switch (this->m) {
       case DOUBLE_L:
         col = "1;43;37m";
@@ -45,7 +44,8 @@ void BoardMarker::print_marker(void) {
       case NONE:
         cout << "Shouldn't reach this line!" << endl;
     }
+    post = "\033[0m";
   }
 
-  cout << pre << col << this->c << post;
+  cout << pre << col << " " << this->c << " " << post;
 }

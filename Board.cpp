@@ -100,13 +100,27 @@ char Board::get_char(int w, int h) {
   return this->board[w][h]->get_char();
 }
 
-void Board::print_board(Board& b) {
+void Board::print_board(void) {
+  this->print_line_row();
   for (int j = (int) this->board[0].size() - 1; j > -1 ; j--) {
+    cout << "|";
     for (size_t i = 0; i < this->board.size(); i++) {
       this->board[i][j]->print_marker();
+      cout << "|";
     }
     cout << endl;
+    this->print_line_row();
   }
+}
+
+void Board::print_line_row(void) {
+  string s("+");
+  for (size_t i = 0; i < this->board.size(); i++) {
+    s.append("----");
+  }
+  s.erase(s.end() - 1);
+  s.append("+");
+  cout << s << endl;
 }
 
 bool Board::valid_position(int& w, int& h) {
