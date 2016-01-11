@@ -160,7 +160,8 @@ void Game::opponent_go(void) {
       break;
     }
 
-    cout << "Incorrect parameters specified. Please try again!" << endl;
+    cout << "Cannot put word on the board with the given parameters specified. "
+         << "Please try again!" << endl;
   }
 }
 
@@ -168,12 +169,10 @@ void Game::player_go(void) {
   while (true) {
     string input_; // Dummy variable
     vector<char > input;
+    input.clear(); // Safety
 
     // For putting on the Board
     int tiles_available = 0;
-    // string word;
-    // int x, y;
-    // Direction d;
 
     // Get the number of tiles
     while (true) {
@@ -197,9 +196,9 @@ void Game::player_go(void) {
       cin >> c;
       input.push_back(toupper(c));
     }
-    cin.clear();
-    cin.ignore(INT_MAX, '\n');
     break;
+
+    // TODO: Word generation and scoring
   }
 }
 
