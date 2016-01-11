@@ -16,6 +16,7 @@
 
 #include "main.hpp"
 #include "Board.hpp"
+#include "Direction.hpp"
 
 using namespace std;
 

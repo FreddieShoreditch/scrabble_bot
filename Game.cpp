@@ -1,12 +1,6 @@
 #include "Game.hpp"
 
 Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
-  // Get the wordlist and put it in memory
-  this->wordlist = new unordered_set<string >();
-  this->get_wordlist(o.language_file);
-  if (this->wordlist->empty()) {
-    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
-  }
 
   // Generate board and start playing
   rapidjson::Document d = get_config_from_file(o.board_config);
@@ -27,30 +21,37 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
     this->tiles_each = 7;
     this->tiles_left = 100;
   }
+  
+  // Get the wordlist and put it in memory
+  this->wordlist = new unordered_set<string >();
+  this->get_wordlist(o.language_file);
+  if (this->wordlist->empty()) {
+    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
+  }
 
   cout << "Words available:\t" << this->words_available << endl;
-  cout << "Players:\t" << this->players << endl;
-  cout << "Your Go:\t" << this->this_player_go << endl;
+  cout << "Players:\t\t" << this->players << endl;
+  cout << "Your Go:\t\t" << this->this_player_go << endl;
   cout << endl;
-  cout << "Board:\t" << endl;
 
   assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
-
-  this->b->print_board();
 
   int go = 0;
   while (!this->is_end()) {
     int player_turn = go % o.players;
     if (player_turn == o.this_player_go - 1) {
+      this->b->print_board();
       cout << "Your go!" << endl;
       this->player_go();
     } else {
+      this->b->print_board();
       cout << "Opponent's go:\tPlayer" << (player_turn + 1) << endl;
       this->opponent_go();
-      this->b->print_board();
     }
     go++;
   }
+  this->b->print_board();
+  cout << "This is the final board!" << endl;
 }
 
 rapidjson::Document get_config_from_file(string& config) {
@@ -135,7 +136,7 @@ void Game::opponent_go(void) {
       cin.clear();
       cin.ignore(INT_MAX, '\n');
 
-      if (valid_position_for_game(x, y)) {
+      if (this->b->valid_position(x, y)) {
         break;
       }
     }
@@ -199,23 +200,16 @@ void Game::player_go(void) {
       }
     }
 
-    // Get the tiles from the user
-    while (true) {
-      // Get the tiles
-      cout << "Please enter the tiles you have left, separated by a space:\t";
-      char c;
-      for (int i = 0; i < tiles_available; i++) {
-        cin >> c;
-        input.push_back(toupper(c));
-      }
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
-
-      for (auto it = input.begin(); it != input.end(); it++) {
-        cout << *it << " ";
-      }
-      cout << endl;
+    // Get the tiles
+    cout << "Please enter the tiles you have left, separated by a space:\t";
+    char c;
+    for (int i = 0; i < tiles_available; i++) {
+      cin >> c;
+      input.push_back(toupper(c));
     }
+    cin.clear();
+    cin.ignore(INT_MAX, '\n');
+    break;
   }
 }
 
@@ -230,10 +224,6 @@ bool Game::valid_word_for_game(string& input) {
   return true;
 }
 
-bool Game::valid_position_for_game(int& x, int& y) {
-  return true;
-}
-
 // Assumes that string input is a valid word.
 bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
   return true;
@@ -241,11 +231,27 @@ bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
 
 void Game::get_wordlist(string& filename) {
   ifstream file(filename);
-  string s;
+  string word;
+  regex e("^[A-Za-z]*$");
 
   while (!file.eof()) {
-    getline(file, s);
-    this->wordlist->insert(s);
+    getline(file, word);
+
+    // Remove \r and \n from word
+    int index, last_r, last_n;
+    last_r = word.find_last_of('\r');
+    if (last_r < 0) { last_r = INT_MAX; }
+    last_n = word.find_last_of('\n');
+    if (last_n < 0) { last_n = INT_MAX; }
+
+    index = (last_r < last_n) ? last_r : last_n;
+    if ((size_t) index > word.size()) { index = word.size(); }
+
+    word = word.substr(0, index);
+
+    if (regex_match(word, e)) {
+      this->wordlist->insert(word);
+    }
   }
 
   this->words_available = this->wordlist->size();
