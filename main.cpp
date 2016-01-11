@@ -53,7 +53,8 @@ int main(int argc, char** argv) {
   int width = d["board_width"].GetInt();
   int height = d["board_height"].GetInt();
   rapidjson::Value& mods(d["modifiers"]);
-  Board bd(board_name, width, height, mods);
+  rapidjson::Value& scores(d["scores"]);
+  Board bd(board_name, width, height, mods, scores);
 
   return 0;
 

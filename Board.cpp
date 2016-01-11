@@ -1,7 +1,8 @@
 #include "Board.hpp"
 
-Board::Board(string& name_, int& width_, int& height_, rapidjson::Value& mods)
-  : name(name_), width(width_), height(height_) {
+Board::Board(string& name_, int& width_, int& height_,
+  rapidjson::Value& mods, rapidjson::Value& scores)
+  : name(name_), width(width_), height(height_), scoring() {
   this->board.resize(width);
   for (size_t i = 0; i < this->board.size(); i++) {
     this->board[i].resize(height);
@@ -28,6 +29,14 @@ Board::Board(string& name_, int& width_, int& height_, rapidjson::Value& mods)
   if (!mods["triple_w"].IsNull()) {
     Modifier m = TRIPLE_W;
     apply_modifier_array(m, mods["triple_w"]);
+  }
+
+  if (!scores.IsNull()) {
+    for (char c = 'a'; c <= 'z'; c++) {
+      string s({ c, '\0'});
+      int score = scores[s.c_str()].GetInt();
+      this->scoring.emplace(c, score);
+    }
   }
 }
 
