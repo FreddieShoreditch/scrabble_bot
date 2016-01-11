@@ -9,34 +9,28 @@ int main(int argc, char** argv) {
   // Set defaults
   opts.language_file = "./submodules/wordlists_en_mozilla/en_GB (Marco Pinto) - 2.32 - 2016-01-01/wordlist_marcoagpinto_20160101_153347w.txt";
 
-  while ((c = getopt (argc, argv, "b:g:hl:")) != -1) {
+  while ((c = getopt (argc, argv, "b:g:o:hl:")) != -1) {
+    string opt(optarg);
     switch (c) {
       case 'b':
-        if (!opts.game_played.empty()) {
-          print_error("You cannot set both the board type and the game you're playing. Using game played as priority.");
-        } else {
-          string opt(optarg);
-          opts.board_config = opt;
-          if (opt.compare("Scrabble") == 0) {
-            opts.board_config = "./board_configs/hasbro_scrabble.json";
-          } else if (opt.compare("WordsWFriends") == 0) {
-            opts.board_config = "./board_configs/words_with_friends.json";
-          }
+        opts.board_config = opt;
+        if (opt.compare("Scrabble") == 0) {
+          opts.board_config = "./board_configs/hasbro_scrabble.json";
+        } else if (opt.compare("WordsWFriends") == 0) {
+          opts.board_config = "./board_configs/words_with_friends.json";
         }
         break;
-      case 'g':
-        if (!opts.board_config.empty()) {
-          print_error("You cannot set both the board type and the game you're playing. Using board config as priority.");
-        } else {
-          opts.game_played = optarg;
-        }
+      case 'p':
+        opts.players = stoi(opt);
+        break;
+      case 'o':
+        opts.this_player_go = stoi(opt);
         break;
       case 'h':
         usage();
         exit(EXIT_SUCCESS);
         break;
       case 'l':
-        string opt(optarg);
         if (opt.compare("en_GB") == 0 || opt.compare("en") == 0 ||
             opt.compare("English") == 0 || opt.compare("english") == 0) {
           continue;
@@ -55,18 +49,13 @@ int main(int argc, char** argv) {
   };
 
   // Print configuration
-  if (errors) { cout << endl; }
+  if (errors) { exit(EXIT_FAILURE); }
+
+  // Continue with game
   cout << "Starting scrabble bot!..." << endl << endl;
   cout << "Board file:\t" << opts.board_config << endl;
 
-  // Generate board and start playing
-  rapidjson::Document d = get_config_from_file(opts.board_config);
-  string board_name(d["board_name"].GetString());
-  int width = d["board_width"].GetInt();
-  int height = d["board_height"].GetInt();
-  rapidjson::Value& mods(d["modifiers"]);
-  rapidjson::Value& scores(d["scores"]);
-  Board bd(board_name, width, height, mods, scores);
+  new Game(opts);
 
   return 0;
 
@@ -83,7 +72,7 @@ void print_error(string err) {
 bool check_options(options o) {
   bool valid = true;
 
-  valid &= !o.board_config.empty() || !o.game_played.empty();
+  valid &= !o.board_config.empty() || !o.players || !o.this_player_go;
 
   return valid;
 }
@@ -104,21 +93,4 @@ void usage(void) {
   cout << " -- Not to be used with '-g'" << endl;
   cout << "\t" << "-g" << "\t:\t" << "Game being played (Scrabble|WordsWFriends)";
   cout << " -- Not to be used with '-b'" << endl;
-}
-
-rapidjson::Document get_config_from_file(string& config) {
-  ifstream config_file(config);
-
-  // get length of file:
-  config_file.seekg (0, config_file.end);
-  int length = config_file.tellg();
-  config_file.seekg (0, config_file.beg);
-  char* config_file_raw = new char[length];
-
-  config_file.read(config_file_raw, length);
-
-  rapidjson::Document d;
-  d.Parse(config_file_raw);
-
-  return d;
 }
