@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 
 // Dependencies
 #include "submodules/rapidjson/include/rapidjson/document.h"
@@ -33,9 +34,11 @@ class Board {
     string name;
     int width;
     int height;
+    unordered_map<char, int> scoring;
 
   public:
-    Board(string& name, int& width, int& height, rapidjson::Value& mods);
+    Board(string& name, int& width, int& height,
+      rapidjson::Value& mods, rapidjson::Value& scores);
     void print_board(Board& b);
     bool set_word(string s, int w, int h, Direction d);
     string get_word(int w, int h, Direction d);
