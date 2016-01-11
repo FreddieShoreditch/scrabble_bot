@@ -9,6 +9,7 @@ class CharacterInput {
 
   public:
     CharacterInput(char& c);
+    char& get_char(void);
 
 };
 
