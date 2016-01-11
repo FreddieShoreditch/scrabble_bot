@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
+Game::Game(options o) : players(o.players), this_player_go(o.this_player_go), no_tiles_each(7) { // TODO: NO_TILES_EACH
   // Generate board and start playing
   rapidjson::Document d = get_config_from_file(o.board_config);
   string board_name(d["board_name"].GetString());
@@ -16,6 +16,7 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
   cout << "Your Go:\t" << this->this_player_go << endl;
   cout << endl;
   cout << "Board:\t" << endl;
+  this->b->set_word("I WILL BEAT YOU", 0, 7, EAST);
   this->b->print_board();
 
   int go = 0;
@@ -65,7 +66,7 @@ void Game::opponent_go(void) {
 
     while (true) {
       string word_regex("[A-Za-z]{1,");
-      word_regex.append("2");
+      word_regex.append(to_string(this->no_tiles_each));
       word_regex.append("}");
       regex validator(word_regex);
 

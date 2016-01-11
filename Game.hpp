@@ -24,6 +24,7 @@ class Game {
     Board* b;
     int players;
     int this_player_go;
+    int no_tiles_each;
     bool is_end(void);
     void player_go(void);
     void opponent_go(void);
