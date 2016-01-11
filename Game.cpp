@@ -91,9 +91,7 @@ void Game::opponent_go(void) {
 
       // Get the word
       cout << "Please enter the word (if you type more than 1 word, the second will be ignored):\t";
-      cin >> noskipws >> input;
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
+      cin >> input;
 
       if (input.compare("") == 0) {
         cout << "The opponent passed!" << endl;
@@ -117,7 +115,7 @@ void Game::opponent_go(void) {
       try {
         x = stoi(input);
         if (x <= 0 || x > this->b->get_width()) {
-          throw invalid_argument("");
+          throw invalid_argument("X not in range");
         }
         x -= 1; // Convert from user to program
       } catch (invalid_argument e) {
@@ -127,13 +125,11 @@ void Game::opponent_go(void) {
       }
 
       cin >> input;
+      cout << input << endl;
       if (!regex_match(input, y_)) {
         continue;
       }
       y = (int) toupper(input[0]) - 'A';
-
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
 
       if (this->b->valid_position(x, y)) {
         break;
