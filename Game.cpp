@@ -138,14 +138,9 @@ void Game::opponent_go(void) {
 
     while (true) {
       // Get the word
-      cout << "Please enter the direction (NORTH|EAST|SOUTH|WEST):\t";
+      cout << "Please enter the direction ( NORTH | EAST | SOUTH | WEST ):\t";
       cin >> input;
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
-
-      for (auto& c : input) {
-        c = toupper(c);
-      }
+      for (auto& c : input) { c = toupper(c); }
 
       if (input.compare("NORTH") == 0) {
         d = NORTH; break;
