@@ -1,6 +1,13 @@
 #include "Game.hpp"
 
 Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
+  // Get the wordlist and put it in memory
+  this->wordlist = new unordered_set<string >();
+  this->get_wordlist(o.language_file);
+  if (this->wordlist->empty()) {
+    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
+  }
+
   // Generate board and start playing
   rapidjson::Document d = get_config_from_file(o.board_config);
   string board_name(d["board_name"].GetString());
@@ -21,12 +28,14 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
     this->tiles_left = 100;
   }
 
-  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
-
+  cout << "Words available:\t" << this->words_available << endl;
   cout << "Players:\t" << this->players << endl;
   cout << "Your Go:\t" << this->this_player_go << endl;
   cout << endl;
   cout << "Board:\t" << endl;
+
+  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
+
   this->b->print_board();
 
   int go = 0;
@@ -228,4 +237,16 @@ bool Game::valid_position_for_game(int& x, int& y) {
 // Assumes that string input is a valid word.
 bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
   return true;
+}
+
+void Game::get_wordlist(string& filename) {
+  ifstream file(filename);
+  string s;
+
+  while (!file.eof()) {
+    getline(file, s);
+    this->wordlist->insert(s);
+  }
+
+  this->words_available = this->wordlist->size();
 }

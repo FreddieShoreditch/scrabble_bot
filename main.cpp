@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
   // Set defaults
   opts.language_file = "./submodules/wordlists_en_mozilla/en_GB (Marco Pinto) - 2.32 - 2016-01-01/wordlist_marcoagpinto_20160101_153347w.txt";
 
-  while ((c = getopt (argc, argv, "b:g:o:hl:")) != -1) {
+  while ((c = getopt (argc, argv, "b:o:p:l:h")) != -1) {
     string opt(optarg);
     switch (c) {
       case 'b':
@@ -53,7 +53,6 @@ int main(int argc, char** argv) {
 
   // Continue with game
   cout << "Starting scrabble bot!..." << endl << endl;
-  cout << "Board file:\t" << opts.board_config << endl;
 
   new Game(opts);
 
