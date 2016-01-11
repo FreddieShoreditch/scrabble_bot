@@ -166,12 +166,28 @@ void Game::opponent_go(void) {
 
 void Game::player_go(void) {
   while (true) {
-    string input;
+    string input_; // Dummy variable
+    vector<char > input;
 
     // For putting on the Board
-    string word;
-    int x, y;
-    Direction d;
+    int tiles_available = 0;
+    // string word;
+    // int x, y;
+    // Direction d;
+
+    // Get the number of tiles
+    while (true) {
+      cout << "How many tiles do you have left? (Between 0 and " << this->tiles_each << ")\t";
+      cin >> input_;
+      try {
+        tiles_available = stoi(input_);
+        if (tiles_available > 0 && tiles_available <= this->tiles_each) {
+          break;
+        }
+      } catch (invalid_argument e) {
+        continue;
+      }
+    }
 
     // Get the tiles from the user
     while (true) {
@@ -181,84 +197,20 @@ void Game::player_go(void) {
       regex validator(word_regex);
 
       // Get the word
-      cout << "Please enter the tiles you have left (if you type more than 1 word, the second will be ignored):\t";
-      cin >> input;
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
-      if (regex_match(input, validator) && valid_word_for_game(input)) {
-        word = input;
-        break;
+      cout << "Please enter the tiles you have left, separated by a space:\t";
+      char c;
+      for (int i = 0; i < tiles_available; i++) {
+        cin >> c;
+        input.push_back(toupper(c));
       }
-      cout << "The word you entered was invalid. Please try again." << endl;
-    }
-
-    if (word.compare("") == 0) {
-      cout << "The opponent passed!" << endl;
-      break;
-    }
-
-    while (true) {
-      regex y_("^[A-Za-z]$");
-
-      // Get the position
-      cout << "Please enter the position on the board (e.g. 1 A):\t";
-      cin >> input;
-      try {
-        x = stoi(input);
-        if (x <= 0 || x > this->b->get_width()) {
-          throw invalid_argument("");
-        }
-        x -= 1; // Convert from user to program
-      } catch (invalid_argument e) {
-        cout << "The value " << input << " is not in the range {1,"
-             << this->b->get_width() << "}."<< endl;
-        continue;
-      }
-
-      cin >> input;
-      if (!regex_match(input, y_)) {
-        continue;
-      }
-      y = (int) toupper(input[0]) - 'A';
-
       cin.clear();
       cin.ignore(INT_MAX, '\n');
 
-      if (valid_position_for_game(x, y)) {
-        break;
+      for (auto it = input.begin(); it != input.end(); it++) {
+        cout << *it << " ";
       }
+      cout << endl;
     }
-
-    while (true) {
-      // Get the word
-      cout << "Please enter the direction (NORTH|EAST|SOUTH|WEST):\t";
-      cin >> input;
-      cin.clear();
-      cin.ignore(INT_MAX, '\n');
-
-      for (auto& c : input) {
-        c = toupper(c);
-      }
-
-      if (input.compare("NORTH") == 0) {
-        d = NORTH; break;
-      } else if (input.compare("EAST") == 0) {
-        d = EAST; break;
-      } else if (input.compare("SOUTH") == 0) {
-        d = SOUTH; break;
-      } else if (input.compare("WEST") == 0) {
-        d = WEST; break;
-      }
-
-      cout << "Incorrect direction. Please try again!" << endl;
-    }
-
-    if (can_put_word_on_board(word, x, y, d)) {
-      this->b->set_word(word, x, y, d);
-      break;
-    }
-
-    cout << "Incorrect parameters specified. Please try again!" << endl;
   }
 }
 
