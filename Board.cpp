@@ -73,6 +73,24 @@ bool Board::set_char(char c, int w, int h) {
   return false;
 }
 
+string Board::get_word(int w, int h, Direction d) {
+  int longitude = DirectionUtils::get_direction_longitude(d);
+  int latitude = DirectionUtils::get_direction_latitude(d);
+
+  char c;
+  string s = "";
+  while ((c = this->get_char(w, h)) != ' ' && Board::valid_position(w, h)) {
+    s.append(&c);
+    w += longitude;
+    h += latitude;
+  }
+  return s;
+}
+
+char Board::get_char(int w, int h) {
+  return this->board[w][h]->get_char();
+}
+
 void Board::print_board(Board& b) {
   for (int j = (int) this->board[0].size() - 1; j > -1 ; j--) {
     for (size_t i = 0; i < this->board.size(); i++) {
@@ -80,4 +98,11 @@ void Board::print_board(Board& b) {
     }
     cout << endl;
   }
+}
+
+bool Board::valid_position(int& w, int& h) {
+  return (
+    w >= 0 && w < this->width &&
+    h >= 0 && h < this->height
+  );
 }

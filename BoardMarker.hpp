@@ -20,6 +20,7 @@ class BoardMarker {
     bool apply_modifier(Modifier& m);
     void print_marker(void);
     bool set_char(char& c);
+    char get_char(void);
 
 };
 

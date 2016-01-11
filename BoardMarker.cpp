@@ -18,6 +18,10 @@ bool BoardMarker::set_char(char& c) {
   return true;
 }
 
+char BoardMarker::get_char(void) {
+  return this->c;
+}
+
 void BoardMarker::print_marker(void) {
   string pre = " ";
   string col = "";
