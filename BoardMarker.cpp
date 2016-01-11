@@ -12,7 +12,7 @@ bool BoardMarker::apply_modifier(Modifier& m) {
 
 bool BoardMarker::set_char(char& c) {
   if (this->c != ' ') {
-    return false;
+    return this->c == c;
   }
   this->c = toupper(c);
   return true;
