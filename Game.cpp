@@ -1,7 +1,6 @@
 #include "Game.hpp"
 
 Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
-
   // Generate board and start playing
   rapidjson::Document d = get_config_from_file(o.board_config);
   string board_name(d["board_name"].GetString());
@@ -21,7 +20,7 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
     this->tiles_each = 7;
     this->tiles_left = 100;
   }
-  
+
   // Get the wordlist and put it in memory
   this->wordlist = new unordered_set<string >();
   this->get_wordlist(o.language_file);
@@ -215,13 +214,16 @@ void Game::player_go(void) {
 
 // Checks the string against the dictionary
 bool Game::valid_word_for_game(string& input) {
+  // Make input UPPERCASE
+  for (char& c : input) { c = toupper(c); }
+
   // Checks for whitespace and non-alphas
-  regex e("^[A-Za-z]*$");
+  regex e("^[A-Z]*$");
   if (!regex_match(input, e)) { return false; }
 
   // Checks for word in dictionary
-
-  return true;
+  auto it = this->wordlist->find(input);
+  return it == this->wordlist->end();
 }
 
 // Assumes that string input is a valid word.
