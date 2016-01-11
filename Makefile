@@ -4,7 +4,7 @@ RM = rm -rf
 
 all: main
 
-main: main.o Board.o BoardMarker.o
+main: main.o Board.o BoardMarker.o Direction.o
 	$(CC) $(CCOPT) $^ -o $@
 
 %.o: %.cpp %.hpp
