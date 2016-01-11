@@ -205,11 +205,6 @@ void Game::player_go(void) {
       }
       cin.clear();
       cin.ignore(INT_MAX, '\n');
-
-      for (auto it = input.begin(); it != input.end(); it++) {
-        cout << *it << " ";
-      }
-      cout << endl;
     }
   }
 }
