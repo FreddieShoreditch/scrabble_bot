@@ -30,6 +30,7 @@ Board::Board(string& name_, int& width_, int& height_, rapidjson::Value& mods)
     apply_modifier_array(m, mods["triple_w"]);
   }
 
+  print_board(*this);
 }
 
 void Board::apply_modifier_array(Modifier& m, rapidjson::Value& mod_array) {
@@ -50,8 +51,8 @@ bool Board::set_char(char c, int w, int h) {
 }
 
 void Board::print_board(Board& b) {
-  for (size_t i = 0; i < this->board.size(); i++) {
-    for (size_t j = 0; j < this->board[0].size(); j++) {
+  for (int j = (int) this->board[0].size() - 1; j > -1 ; j--) {
+    for (size_t i = 0; i < this->board.size(); i++) {
       this->board[i][j]->print_marker();
     }
     cout << endl;
