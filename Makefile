@@ -4,8 +4,8 @@ RM = rm -rf
 
 all: main
 
-main: main.cpp main.hpp
-	$(CC) $(CCOPT) $< -o $@
+main: main.o Board.o BoardMarker.o Direction.o
+	$(CC) $(CCOPT) $^ -o $@
 
 %.o: %.cpp %.hpp
 	$(CC) $(CCOPT) -c $< -o $@
