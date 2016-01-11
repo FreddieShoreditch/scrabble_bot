@@ -41,6 +41,9 @@ void BoardMarker::print_marker(void) {
       case TRIPLE_W:
         col = "1;41;37m";
         break;
+      case CENTRE:
+        col = "1;45;37m";
+        break;
       case NONE:
         cout << "Shouldn't reach this line!" << endl;
     }

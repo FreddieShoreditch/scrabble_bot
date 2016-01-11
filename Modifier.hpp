@@ -5,6 +5,7 @@
 enum Modifier {
 
   NONE,
+  CENTRE,
   TRIPLE_W,
   TRIPLE_L,
   DOUBLE_W,
