@@ -177,7 +177,8 @@ void Game::player_go(void) {
 
     // Get the number of tiles
     while (true) {
-      cout << "How many tiles do you have left? (Between 0 and " << this->tiles_each << ")\t";
+      cout << "How many tiles do you have left? (Between 0 and "
+           << to_string(this->tiles_each) << ")\t";
       cin >> input_;
       try {
         tiles_available = stoi(input_);
@@ -191,12 +192,7 @@ void Game::player_go(void) {
 
     // Get the tiles from the user
     while (true) {
-      string word_regex("[A-Za-z]{0,");
-      word_regex.append(to_string(this->tiles_each));
-      word_regex.append("}");
-      regex validator(word_regex);
-
-      // Get the word
+      // Get the tiles
       cout << "Please enter the tiles you have left, separated by a space:\t";
       char c;
       for (int i = 0; i < tiles_available; i++) {
@@ -205,11 +201,23 @@ void Game::player_go(void) {
       }
       cin.clear();
       cin.ignore(INT_MAX, '\n');
+
+      for (auto it = input.begin(); it != input.end(); it++) {
+        cout << *it << " ";
+      }
+      cout << endl;
     }
   }
 }
 
+// Checks the string against the dictionary
 bool Game::valid_word_for_game(string& input) {
+  // Checks for whitespace and non-alphas
+  regex e("^[A-Za-z]*$");
+  if (!regex_match(input, e)) { return false; }
+
+  // Checks for word in dictionary
+
   return true;
 }
 
@@ -217,6 +225,7 @@ bool Game::valid_position_for_game(int& x, int& y) {
   return true;
 }
 
+// Assumes that string input is a valid word.
 bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
   return true;
 }
