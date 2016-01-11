@@ -19,6 +19,7 @@ using namespace std;
 typedef struct {
   string board_config;
   string game_played;
+  string language_file;
 } options;
 
 void print_error(string err);

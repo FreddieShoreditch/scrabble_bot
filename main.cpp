@@ -6,7 +6,10 @@ int main(int argc, char** argv) {
   options opts;
   int c;
 
-  while ((c = getopt (argc, argv, "b:g:h")) != -1) {
+  // Set defaults
+  opts.language_file = "./submodules/wordlists_en_mozilla/en_GB (Marco Pinto) - 2.32 - 2016-01-01/wordlist_marcoagpinto_20160101_153347w.txt";
+
+  while ((c = getopt (argc, argv, "b:g:hl:")) != -1) {
     switch (c) {
       case 'b':
         if (!opts.game_played.empty()) {
@@ -31,6 +34,15 @@ int main(int argc, char** argv) {
       case 'h':
         usage();
         exit(EXIT_SUCCESS);
+        break;
+      case 'l':
+        string opt(optarg);
+        if (opt.compare("en_GB") == 0 || opt.compare("en") == 0 ||
+            opt.compare("English") == 0 || opt.compare("english") == 0) {
+          continue;
+        } else {
+          print_error("Language given is not known. Please try again.");
+        }
     }
   }
 

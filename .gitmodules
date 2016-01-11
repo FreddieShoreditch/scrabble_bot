@@ -1,3 +1,6 @@
 [submodule "submodules/rapidjson"]
 	path = submodules/rapidjson
 	url = git@github.com:miloyip/rapidjson.git
+[submodule "submodules/wordlists_en_mozilla"]
+	path = submodules/wordlists_en_mozilla
+	url = git@github.com:marcoagpinto/aoo-mozilla-en-dict.git
