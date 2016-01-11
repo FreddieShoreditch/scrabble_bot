@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) { // TODO: NO_TILES_EACH
+Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
   // Generate board and start playing
   rapidjson::Document d = get_config_from_file(o.board_config);
   string board_name(d["board_name"].GetString());
@@ -62,7 +62,7 @@ rapidjson::Document get_config_from_file(string& config) {
 }
 
 bool Game::is_end(void) {
-  return false;
+  return this->tiles_left == 0;
 }
 
 void Game::opponent_go(void) {
