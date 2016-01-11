@@ -15,6 +15,7 @@
 
 // Created libraries
 #include "BoardMarker.hpp"
+#include "Direction.hpp"
 #include "Modifier.hpp"
 
 using namespace std;
@@ -25,6 +26,7 @@ class Board {
 
   private:
     void apply_modifier_array(Modifier& m, rapidjson::Value& mod_array);
+    bool set_char(char c, int w, int h);
     vector<vector<BoardMarker*> > board;
     string name;
     int width;
@@ -33,7 +35,7 @@ class Board {
   public:
     Board(string& name, int& width, int& height, rapidjson::Value& mods);
     void print_board(Board& b);
-    bool set_char(char c, int w, int h);
+    bool set_word(string s, int w, int h, Direction d);
 
 };
 

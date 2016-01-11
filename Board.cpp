@@ -29,8 +29,6 @@ Board::Board(string& name_, int& width_, int& height_, rapidjson::Value& mods)
     Modifier m = TRIPLE_W;
     apply_modifier_array(m, mods["triple_w"]);
   }
-
-  print_board(*this);
 }
 
 void Board::apply_modifier_array(Modifier& m, rapidjson::Value& mod_array) {
@@ -40,6 +38,31 @@ void Board::apply_modifier_array(Modifier& m, rapidjson::Value& mod_array) {
     int y = mod_array[i]["y"].GetInt();
     this->board[x - 1][y - 1]->apply_modifier(m);
   }
+}
+
+bool Board::set_word(string s, int w, int h, Direction d) {
+  int longitude = DirectionUtils::get_direction_longitude(d);
+  int latitude = DirectionUtils::get_direction_latitude(d);
+
+  int w_diff = w + (s.length() * longitude);
+  int h_diff = h + (s.length() * latitude);
+
+  // Ensure all variables lie within the board
+  bool w_val = w >= 0 && w < this->width;
+  bool w_diff_val = w_diff >= 0 && w_diff < this->width;
+  bool h_val = h >= 0 && h < this->height;
+  bool h_diff_val = h_diff >= 0 && h_diff < this->height;
+
+  if (!(w_val && w_diff_val && h_val && h_diff_val)) {
+    return false;
+  }
+
+  for (size_t i = 0; i < s.length(); i++) {
+    if (!this->set_char(s[i], w + (i * longitude), h + (i * latitude))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool Board::set_char(char c, int w, int h) {
