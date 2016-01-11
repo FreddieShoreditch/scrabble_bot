@@ -44,6 +44,8 @@ class Board {
     void print_board(void);
     bool set_word(string s, int w, int h, Direction d);
     string get_word(int w, int h, Direction d);
+    int get_width(void);
+    int get_height(void);
 
 };
 

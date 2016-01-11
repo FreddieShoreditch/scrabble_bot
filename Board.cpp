@@ -106,6 +106,14 @@ char Board::get_char(int w, int h) {
   return this->board[w][h]->get_char();
 }
 
+int Board::get_width(void) {
+  return this->width;
+}
+
+int Board::get_height(void) {
+  return this->height;
+}
+
 void Board::print_board(void) {
   this->print_line_row();
   for (int j = (int) this->board[0].size() - 1; j > -1 ; j--) {
