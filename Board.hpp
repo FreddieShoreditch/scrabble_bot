@@ -28,9 +28,7 @@ class Board {
 
   private:
     void apply_modifier_array(Modifier& m, rapidjson::Value& mod_array);
-    bool valid_position(int& w, int& h);
     bool set_char(char c, int w, int h);
-    char get_char(int w, int h);
     void print_line_row(void);
     vector<vector<BoardMarker*> > board;
     string name;
@@ -44,6 +42,10 @@ class Board {
     void print_board(void);
     bool set_word(string s, int w, int h, Direction d);
     string get_word(int w, int h, Direction d);
+    int get_width(void);
+    int get_height(void);
+    char get_char(int w, int h);
+    bool valid_position(int& w, int& h);
 
 };
 

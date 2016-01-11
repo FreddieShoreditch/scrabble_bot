@@ -4,7 +4,9 @@ RM = rm -rf
 
 all: main
 
-main: main.o Board.o BoardMarker.o Direction.o
+main: main.o \
+	Game.o Board.o BoardMarker.o Direction.o \
+	CharacterInput.o Modifier.o WordGenerator.o
 	$(CC) $(CCOPT) $^ -o $@
 
 %.o: %.cpp %.hpp

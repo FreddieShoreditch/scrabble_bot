@@ -59,8 +59,8 @@ bool Board::set_word(string s, int w, int h, Direction d) {
   int longitude = DirectionUtils::get_direction_longitude(d);
   int latitude = DirectionUtils::get_direction_latitude(d);
 
-  int w_diff = w + (s.length() * longitude);
-  int h_diff = h + (s.length() * latitude);
+  int w_diff = w + ((s.length() - 1) * longitude);
+  int h_diff = h + ((s.length() - 1) * latitude);
 
   // Ensure all variables lie within the board
   bool w_val = w >= 0 && w < this->width;
@@ -104,6 +104,14 @@ string Board::get_word(int w, int h, Direction d) {
 
 char Board::get_char(int w, int h) {
   return this->board[w][h]->get_char();
+}
+
+int Board::get_width(void) {
+  return this->width;
+}
+
+int Board::get_height(void) {
+  return this->height;
 }
 
 void Board::print_board(void) {
