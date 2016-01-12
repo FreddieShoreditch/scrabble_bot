@@ -155,7 +155,7 @@ void Game::opponent_go(void) {
       cout << "Incorrect direction. Please try again!" << endl;
     }
 
-    if (can_put_word_on_board(word, x, y, d)) {
+    if (this->b->can_set_word(word, x, y, d)) {
       this->b->set_word(word, x, y, d);
       break;
     }
@@ -217,11 +217,6 @@ bool Game::valid_word_for_game(string& input) {
   // Checks for word in dictionary
   auto it = this->wordlist->find(input);
   return it == this->wordlist->end();
-}
-
-// Assumes that string input is a valid word.
-bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
-  return true;
 }
 
 void Game::get_wordlist(string& filename) {

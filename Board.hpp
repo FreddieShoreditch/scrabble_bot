@@ -40,8 +40,8 @@ class Board {
     Board(string& name, int& width, int& height,
       rapidjson::Value& mods, rapidjson::Value& scores);
     void print_board(void);
-    bool set_word(string s, int w, int h, Direction d);
     bool can_set_word(string s, int w, int h, Direction d);
+    bool set_word(string s, int w, int h, Direction d);
     string get_word(int w, int h, Direction d);
     int get_width(void);
     int get_height(void);
