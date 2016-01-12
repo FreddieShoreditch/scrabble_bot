@@ -17,6 +17,7 @@
 #include "main.hpp"
 #include "Board.hpp"
 #include "Direction.hpp"
+#include "CharacterInput.hpp"
 
 using namespace std;
 

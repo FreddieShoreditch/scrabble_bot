@@ -168,7 +168,7 @@ void Game::opponent_go(void) {
 void Game::player_go(void) {
   while (true) {
     string input_; // Dummy variable
-    vector<char > input;
+    vector<CharacterInput* > input;
     input.clear(); // Safety
 
     // For putting on the Board
@@ -192,13 +192,15 @@ void Game::player_go(void) {
     // Get the tiles
     cout << "Please enter the tiles you have left, separated by a space:\t";
     char c;
+    CharacterInput* ci;
     for (int i = 0; i < tiles_available; i++) {
       cin >> c;
-      input.push_back(toupper(c));
+      ci = new CharacterInput(c);
+      input.push_back(ci);
     }
-    break;
 
     // TODO: Word generation and scoring
+    break;
   }
 }
 

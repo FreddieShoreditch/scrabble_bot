@@ -2,6 +2,10 @@
 
 #define CHARACTERINPUT_H
 
+#include <ctype.h>
+
+using namespace std;
+
 class CharacterInput {
 
   private:
