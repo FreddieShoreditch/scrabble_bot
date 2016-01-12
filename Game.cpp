@@ -190,12 +190,14 @@ void Game::player_go(void) {
     }
 
     // Get the tiles
-    cout << "Please enter the tiles you have left, separated by a space:\t";
+    cout << "Please enter the tiles you have left, separated by a space (use '-' for blank):\t";
     char c;
     CharacterInput* ci;
     for (int i = 0; i < tiles_available; i++) {
-      cin >> c;
-      int char_score = this->b->get_score_for_char(c);
+      while (c < 'A' && c > 'Z' && c != '-') {
+        cin >> c;
+      }
+      int char_score = (c != '-') ? this->b->get_score_for_char(c) : 0;
       ci = new CharacterInput(c, char_score);
       input.insert(ci);
     }
