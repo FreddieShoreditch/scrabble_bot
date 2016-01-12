@@ -195,7 +195,8 @@ void Game::player_go(void) {
     CharacterInput* ci;
     for (int i = 0; i < tiles_available; i++) {
       cin >> c;
-      ci = new CharacterInput(c);
+      int char_score = this->b->get_score_for_char(c);
+      ci = new CharacterInput(c, char_score);
       input.push_back(ci);
     }
 

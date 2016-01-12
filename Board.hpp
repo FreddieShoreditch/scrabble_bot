@@ -46,6 +46,7 @@ class Board {
     int get_height(void);
     char get_char(int w, int h);
     bool valid_position(int& w, int& h);
+    int get_score_for_char(char& c);
 
 };
 

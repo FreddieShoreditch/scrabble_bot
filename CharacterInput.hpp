@@ -4,16 +4,16 @@
 
 #include <ctype.h>
 
-using namespace std;
-
 class CharacterInput {
 
   private:
-    char c_;
+    char c;
+    int score;
 
   public:
-    CharacterInput(char& c);
+    CharacterInput(char& c_, int& s);
     char& get_char(void);
+    int& get_score(void);
 
 };
 

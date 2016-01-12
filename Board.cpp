@@ -143,3 +143,12 @@ bool Board::valid_position(int& w, int& h) {
     h >= 0 && h < this->height
   );
 }
+
+int Board::get_score_for_char(char& c) {
+  auto it = this->scoring.find(c);
+  if (it != this->scoring.end()) {
+    return get<1>(*it);
+  } else {
+    return -1;
+  }
+}
