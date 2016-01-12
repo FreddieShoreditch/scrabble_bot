@@ -168,7 +168,7 @@ void Game::opponent_go(void) {
 void Game::player_go(void) {
   while (true) {
     string input_; // Dummy variable
-    vector<CharacterInput* > input;
+    unordered_set<CharacterInput* > input;
     input.clear(); // Safety
 
     // For putting on the Board
@@ -197,7 +197,7 @@ void Game::player_go(void) {
       cin >> c;
       int char_score = this->b->get_score_for_char(c);
       ci = new CharacterInput(c, char_score);
-      input.push_back(ci);
+      input.insert(ci);
     }
 
     // TODO: Word generation and scoring
