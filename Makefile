@@ -6,7 +6,8 @@ all: main
 
 main: main.o \
 	Game.o Board.o BoardMarker.o Direction.o \
-	CharacterInput.o Modifier.o WordGenerator.o
+	CharacterInput.o Modifier.o WordGenerator.o \
+	WordPlay.o
 	$(CC) $(CCOPT) $^ -o $@
 
 %.o: %.cpp %.hpp

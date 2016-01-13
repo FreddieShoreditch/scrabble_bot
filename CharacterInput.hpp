@@ -2,14 +2,20 @@
 
 #define CHARACTERINPUT_H
 
+#include <ctype.h>
+
 class CharacterInput {
 
   private:
-    char c_;
+    char c;
+    int score;
+    bool blank;
 
   public:
-    CharacterInput(char& c);
+    CharacterInput(char& c_, int& s);
     char& get_char(void);
+    int& get_score(void);
+    bool& is_blank(void);
 
 };
 

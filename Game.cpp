@@ -1,8 +1,44 @@
 #include "Game.hpp"
 
 Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
+  this->generate_board(o.board_config);
+
+  // Get the wordlist and put it in memory
+  this->wordlist = new unordered_set<string >();
+  this->get_wordlist(o.language_file, *(this->wordlist));
+  if (this->wordlist->empty()) {
+    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
+  }
+
+  cout << "Words available:\t" << this->words_available << endl;
+  cout << "Players:\t\t" << this->players << endl;
+  cout << "Your Go:\t\t" << this->this_player_go << endl;
+  cout << endl;
+
+  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
+
+  // Game logic
+  int go = 0;
+  while (!this->is_end()) {
+    int player_turn = go % o.players;
+    if (player_turn == o.this_player_go - 1) {
+      this->b->print_board();
+      cout << "Your go!" << endl;
+      this->player_go();
+    } else {
+      this->b->print_board();
+      cout << "Opponent's go:\tPlayer" << (player_turn + 1) << endl;
+      this->opponent_go();
+    }
+    go++;
+  }
+  this->b->print_board();
+  cout << "This is the final board!" << endl;
+}
+
+void Game::generate_board(string& input) {
   // Generate board and start playing
-  rapidjson::Document d = get_config_from_file(o.board_config);
+  rapidjson::Document d = get_config_from_file(input);
   string board_name(d["board_name"].GetString());
   int width = d["board_width"].GetInt();
   int height = d["board_height"].GetInt();
@@ -20,37 +56,6 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
     this->tiles_each = 7;
     this->tiles_left = 100;
   }
-
-  // Get the wordlist and put it in memory
-  this->wordlist = new unordered_set<string >();
-  this->get_wordlist(o.language_file);
-  if (this->wordlist->empty()) {
-    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
-  }
-
-  cout << "Words available:\t" << this->words_available << endl;
-  cout << "Players:\t\t" << this->players << endl;
-  cout << "Your Go:\t\t" << this->this_player_go << endl;
-  cout << endl;
-
-  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
-
-  int go = 0;
-  while (!this->is_end()) {
-    int player_turn = go % o.players;
-    if (player_turn == o.this_player_go - 1) {
-      this->b->print_board();
-      cout << "Your go!" << endl;
-      this->player_go();
-    } else {
-      this->b->print_board();
-      cout << "Opponent's go:\tPlayer" << (player_turn + 1) << endl;
-      this->opponent_go();
-    }
-    go++;
-  }
-  this->b->print_board();
-  cout << "This is the final board!" << endl;
 }
 
 rapidjson::Document get_config_from_file(string& config) {
@@ -80,7 +85,7 @@ void Game::opponent_go(void) {
 
     // For putting on the Board
     string word;
-    int x, y;
+    int x = -1, y = -1;
     Direction d;
 
     while (true) {
@@ -106,7 +111,7 @@ void Game::opponent_go(void) {
       cout << "The word you entered was invalid. Please try again." << endl;
     }
 
-    while (true) {
+    while (!this->b->valid_position(x, y)) {
       regex y_("^[A-Za-z]$");
 
       // Get the position
@@ -130,10 +135,6 @@ void Game::opponent_go(void) {
         continue;
       }
       y = (int) toupper(input[0]) - 'A';
-
-      if (this->b->valid_position(x, y)) {
-        break;
-      }
     }
 
     while (true) {
@@ -155,7 +156,7 @@ void Game::opponent_go(void) {
       cout << "Incorrect direction. Please try again!" << endl;
     }
 
-    if (can_put_word_on_board(word, x, y, d)) {
+    if (this->b->can_set_word(word, x, y, d)) {
       this->b->set_word(word, x, y, d);
       break;
     }
@@ -168,7 +169,7 @@ void Game::opponent_go(void) {
 void Game::player_go(void) {
   while (true) {
     string input_; // Dummy variable
-    vector<char > input;
+    unordered_set<CharacterInput* > input;
     input.clear(); // Safety
 
     // For putting on the Board
@@ -181,7 +182,7 @@ void Game::player_go(void) {
       cin >> input_;
       try {
         tiles_available = stoi(input_);
-        if (tiles_available > 0 && tiles_available <= this->tiles_each) {
+        if (tiles_available >= 0 && tiles_available <= this->tiles_each) {
           break;
         }
       } catch (invalid_argument e) {
@@ -190,15 +191,56 @@ void Game::player_go(void) {
     }
 
     // Get the tiles
-    cout << "Please enter the tiles you have left, separated by a space:\t";
-    char c;
-    for (int i = 0; i < tiles_available; i++) {
-      cin >> c;
-      input.push_back(toupper(c));
+    if (tiles_available > 0) {
+      cout << "Please enter the tiles you have left, separated by a space (use '-' for blank):\t";
+      char c;
+      CharacterInput* ci;
+      for (int i = 0; i < tiles_available; i++) {
+        while (c < 'A' && c > 'Z' && c != '-') {
+          cin >> c;
+        }
+        int char_score = (c != '-') ? this->b->get_score_for_char(c) : 0;
+        ci = new CharacterInput(c, char_score);
+        input.insert(ci);
+      }
     }
-    break;
 
-    // TODO: Word generation and scoring
+    unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
+    WordGenerator wgen(input, *words);
+    wgen.Generator();
+
+    string res;
+    bool cancel = false;
+    for (auto& wp : *words) {
+      string& s = wp->get_word();
+      int& w = wp->get_w();
+      int& h = wp->get_h();
+      Direction& d = wp->get_d();
+
+      if (!this->b->can_set_word(s, w, h, d)) {
+        cout << "Only move is to pass! Passing go!" << endl;
+        return;
+      } else {
+        bool choose = false;
+        while (!choose && res.compare("n") != 0) {
+          string res;
+          cout << "Would you like to play the word \"" << s
+               << "\" at position (" << to_string(w + 1)
+               << ", " << char(h + 'A') << ") (Score: "
+               << wp->get_score() << ") [Y/n/c]:\t";
+          cin >> res;
+          cancel = res.compare("c") == 0;
+          choose = res.compare("Y") == 0 || cancel;
+        }
+
+        if (cancel) { break; }
+
+        if (choose) {
+          this->b->set_word(s, w, h, d);
+          return;
+        }
+      }
+    }
   }
 }
 
@@ -213,15 +255,10 @@ bool Game::valid_word_for_game(string& input) {
 
   // Checks for word in dictionary
   auto it = this->wordlist->find(input);
-  return it == this->wordlist->end();
+  return it != this->wordlist->end();
 }
 
-// Assumes that string input is a valid word.
-bool Game::can_put_word_on_board(string& word, int& w, int& h, Direction& d) {
-  return true;
-}
-
-void Game::get_wordlist(string& filename) {
+void Game::get_wordlist(string& filename, unordered_set<string >& set_) {
   ifstream file(filename);
   string word;
   regex e("^[A-Za-z]*$");
@@ -242,9 +279,9 @@ void Game::get_wordlist(string& filename) {
     word = word.substr(0, index);
 
     if (regex_match(word, e)) {
-      this->wordlist->insert(word);
+      set_.insert(word);
     }
   }
 
-  this->words_available = this->wordlist->size();
+  this->words_available = set_.size();
 }

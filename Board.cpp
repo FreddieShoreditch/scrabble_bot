@@ -55,7 +55,8 @@ void Board::apply_modifier_array(Modifier& m, rapidjson::Value& mod_array) {
   }
 }
 
-bool Board::set_word(string s, int w, int h, Direction d) {
+bool Board::can_set_word(string s, int w, int h, Direction d) {
+  // Check the positioning is on the board
   int longitude = DirectionUtils::get_direction_longitude(d);
   int latitude = DirectionUtils::get_direction_latitude(d);
 
@@ -71,6 +72,20 @@ bool Board::set_word(string s, int w, int h, Direction d) {
   if (!(w_val && w_diff_val && h_val && h_diff_val)) {
     return false;
   }
+
+  // Check that nothing, or the character intended is in place
+  for (size_t i = 0; i < s.length(); i++) {
+    char current = this->get_char(w + (i * longitude), h + (i * latitude));
+    if (current != ' ' && s[i] != current) { return false; }
+  }
+  return true;
+}
+
+bool Board::set_word(string s, int w, int h, Direction d) {
+  int longitude = DirectionUtils::get_direction_longitude(d);
+  int latitude = DirectionUtils::get_direction_latitude(d);
+
+  if (!this->can_set_word(s, w, h, d)) { return false; }
 
   for (size_t i = 0; i < s.length(); i++) {
     if (!this->set_char(s[i], w + (i * longitude), h + (i * latitude))) {
@@ -142,4 +157,13 @@ bool Board::valid_position(int& w, int& h) {
     w >= 0 && w < this->width &&
     h >= 0 && h < this->height
   );
+}
+
+int Board::get_score_for_char(char& c) {
+  auto it = this->scoring.find(c);
+  if (it != this->scoring.end()) {
+    return get<1>(*it);
+  } else {
+    return -1;
+  }
 }
