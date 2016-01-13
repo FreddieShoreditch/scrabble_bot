@@ -18,6 +18,7 @@
 #include "Board.hpp"
 #include "Direction.hpp"
 #include "CharacterInput.hpp"
+#include "WordGenerator.hpp"
 
 using namespace std;
 
@@ -36,7 +37,8 @@ class Game {
     void opponent_go(void);
     bool valid_word_for_game(string& input);
     bool valid_position_for_game(int& x, int& y);
-    void get_wordlist(string& file);
+    void get_wordlist(string& file, unordered_set<string >& set_);
+    void generate_board(string& input);
 
   public:
     Game(options o);

@@ -1,8 +1,44 @@
 #include "Game.hpp"
 
 Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
+  this->generate_board(o.board_config);
+
+  // Get the wordlist and put it in memory
+  this->wordlist = new unordered_set<string >();
+  this->get_wordlist(o.language_file, *(this->wordlist));
+  if (this->wordlist->empty()) {
+    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
+  }
+
+  cout << "Words available:\t" << this->words_available << endl;
+  cout << "Players:\t\t" << this->players << endl;
+  cout << "Your Go:\t\t" << this->this_player_go << endl;
+  cout << endl;
+
+  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
+
+  // Game logic
+  int go = 0;
+  while (!this->is_end()) {
+    int player_turn = go % o.players;
+    if (player_turn == o.this_player_go - 1) {
+      this->b->print_board();
+      cout << "Your go!" << endl;
+      this->player_go();
+    } else {
+      this->b->print_board();
+      cout << "Opponent's go:\tPlayer" << (player_turn + 1) << endl;
+      this->opponent_go();
+    }
+    go++;
+  }
+  this->b->print_board();
+  cout << "This is the final board!" << endl;
+}
+
+void Game::generate_board(string& input) {
   // Generate board and start playing
-  rapidjson::Document d = get_config_from_file(o.board_config);
+  rapidjson::Document d = get_config_from_file(input);
   string board_name(d["board_name"].GetString());
   int width = d["board_width"].GetInt();
   int height = d["board_height"].GetInt();
@@ -20,37 +56,6 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
     this->tiles_each = 7;
     this->tiles_left = 100;
   }
-
-  // Get the wordlist and put it in memory
-  this->wordlist = new unordered_set<string >();
-  this->get_wordlist(o.language_file);
-  if (this->wordlist->empty()) {
-    print_error("Wordlist could not be loaded. File used:\t" + o.language_file);
-  }
-
-  cout << "Words available:\t" << this->words_available << endl;
-  cout << "Players:\t\t" << this->players << endl;
-  cout << "Your Go:\t\t" << this->this_player_go << endl;
-  cout << endl;
-
-  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
-
-  int go = 0;
-  while (!this->is_end()) {
-    int player_turn = go % o.players;
-    if (player_turn == o.this_player_go - 1) {
-      this->b->print_board();
-      cout << "Your go!" << endl;
-      this->player_go();
-    } else {
-      this->b->print_board();
-      cout << "Opponent's go:\tPlayer" << (player_turn + 1) << endl;
-      this->opponent_go();
-    }
-    go++;
-  }
-  this->b->print_board();
-  cout << "This is the final board!" << endl;
 }
 
 rapidjson::Document get_config_from_file(string& config) {
@@ -202,6 +207,10 @@ void Game::player_go(void) {
       input.insert(ci);
     }
 
+    unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
+    WordGenerator wgen(input, *words);
+    wgen.Generator();
+
     // TODO: Word generation and scoring
     break;
   }
@@ -221,7 +230,7 @@ bool Game::valid_word_for_game(string& input) {
   return it == this->wordlist->end();
 }
 
-void Game::get_wordlist(string& filename) {
+void Game::get_wordlist(string& filename, unordered_set<string >& set_) {
   ifstream file(filename);
   string word;
   regex e("^[A-Za-z]*$");
@@ -242,9 +251,9 @@ void Game::get_wordlist(string& filename) {
     word = word.substr(0, index);
 
     if (regex_match(word, e)) {
-      this->wordlist->insert(word);
+      set_.insert(word);
     }
   }
 
-  this->words_available = this->wordlist->size();
+  this->words_available = set_.size();
 }
