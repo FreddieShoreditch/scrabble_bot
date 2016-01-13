@@ -205,13 +205,13 @@ void Game::player_go(void) {
       }
     }
 
-    unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
-    WordGenerator wgen(input, *words);
+    vector<WordPlay* > words;
+    WordGenerator wgen(input, words);
     wgen.Generator();
 
     string res;
     bool cancel = false;
-    for (auto& wp : *words) {
+    for (auto& wp : words) {
       string& s = wp->get_word();
       int& w = wp->get_w();
       int& h = wp->get_h();

@@ -2,7 +2,9 @@
 
 #define WORDGENERATOR_H
 
+#include <algorithm>
 #include <iostream>
+#include <queue>
 #include <unordered_set>
 
 // Created libraries
@@ -15,10 +17,10 @@ class WordGenerator {
 
   private:
     unordered_set<CharacterInput* >& input;
-    unordered_set<WordPlay* >& out;
+    vector<WordPlay* >& out;
 
   public:
-    WordGenerator(unordered_set<CharacterInput* >& characters, unordered_set<WordPlay* >& results);
+    WordGenerator(unordered_set<CharacterInput* >& characters, vector<WordPlay* >& results);
     void Generator(void);
 
 };

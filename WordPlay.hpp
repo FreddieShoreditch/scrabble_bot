@@ -22,6 +22,7 @@ class WordPlay {
     int& get_score(void);
     Direction& get_d(void);
     string& get_word(void);
+    bool operator< (WordPlay* that);
 
 };
 
