@@ -182,7 +182,7 @@ void Game::player_go(void) {
       cin >> input_;
       try {
         tiles_available = stoi(input_);
-        if (tiles_available > 0 && tiles_available <= this->tiles_each) {
+        if (tiles_available >= 0 && tiles_available <= this->tiles_each) {
           break;
         }
       } catch (invalid_argument e) {
@@ -191,16 +191,18 @@ void Game::player_go(void) {
     }
 
     // Get the tiles
-    cout << "Please enter the tiles you have left, separated by a space (use '-' for blank):\t";
-    char c;
-    CharacterInput* ci;
-    for (int i = 0; i < tiles_available; i++) {
-      while (c < 'A' && c > 'Z' && c != '-') {
-        cin >> c;
+    if (tiles_available > 0) {
+      cout << "Please enter the tiles you have left, separated by a space (use '-' for blank):\t";
+      char c;
+      CharacterInput* ci;
+      for (int i = 0; i < tiles_available; i++) {
+        while (c < 'A' && c > 'Z' && c != '-') {
+          cin >> c;
+        }
+        int char_score = (c != '-') ? this->b->get_score_for_char(c) : 0;
+        ci = new CharacterInput(c, char_score);
+        input.insert(ci);
       }
-      int char_score = (c != '-') ? this->b->get_score_for_char(c) : 0;
-      ci = new CharacterInput(c, char_score);
-      input.insert(ci);
     }
 
     unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
@@ -208,6 +210,7 @@ void Game::player_go(void) {
     wgen.Generator();
 
     string res;
+    bool cancel = false;
     for (auto& wp : *words) {
       string& s = wp->get_word();
       int& w = wp->get_w();
@@ -215,24 +218,27 @@ void Game::player_go(void) {
       Direction& d = wp->get_d();
 
       if (!this->b->can_set_word(s, w, h, d)) {
-        cout << "Error in WordGenerator!" << endl;
-        exit(EXIT_FAILURE);
-      }
-
-      bool choose = false;
-      while (!choose && res.compare("n") != 0) {
-        string res;
-        cout << "Would you like to play the word \"" << s
-             << "\" at position (" << to_string(w + 1)
-             << ", " << char(h + 'A') << ") (Score: "
-             << wp->get_score() << ") [Y/n]:\t";
-        cin >> res;
-        choose = res.compare("Y") == 0;
-      }
-
-      if (choose) {
-        this->b->set_word(s, w, h, d);
+        cout << "Only move is to pass! Passing go!" << endl;
         return;
+      } else {
+        bool choose = false;
+        while (!choose && res.compare("n") != 0) {
+          string res;
+          cout << "Would you like to play the word \"" << s
+               << "\" at position (" << to_string(w + 1)
+               << ", " << char(h + 'A') << ") (Score: "
+               << wp->get_score() << ") [Y/n/c]:\t";
+          cin >> res;
+          cancel = res.compare("c") == 0;
+          choose = res.compare("Y") == 0 || cancel;
+        }
+
+        if (cancel) { break; }
+
+        if (choose) {
+          this->b->set_word(s, w, h, d);
+          return;
+        }
       }
     }
   }

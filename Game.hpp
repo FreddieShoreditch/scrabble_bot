@@ -44,6 +44,7 @@ class Game {
     Game(options o);
 
 };
+
 rapidjson::Document get_config_from_file(string& config);
 
 #endif
