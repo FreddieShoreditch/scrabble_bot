@@ -85,7 +85,7 @@ void Game::opponent_go(void) {
 
     // For putting on the Board
     string word;
-    int x, y;
+    int x = -1, y = -1;
     Direction d;
 
     while (true) {
@@ -111,7 +111,7 @@ void Game::opponent_go(void) {
       cout << "The word you entered was invalid. Please try again." << endl;
     }
 
-    while (true) {
+    while (!this->b->valid_position(x, y)) {
       regex y_("^[A-Za-z]$");
 
       // Get the position
@@ -135,10 +135,6 @@ void Game::opponent_go(void) {
         continue;
       }
       y = (int) toupper(input[0]) - 'A';
-
-      if (this->b->valid_position(x, y)) {
-        break;
-      }
     }
 
     while (true) {
@@ -211,8 +207,34 @@ void Game::player_go(void) {
     WordGenerator wgen(input, *words);
     wgen.Generator();
 
-    // TODO: Word generation and scoring
-    break;
+    string res;
+    for (auto& wp : *words) {
+      string& s = wp->get_word();
+      int& w = wp->get_w();
+      int& h = wp->get_h();
+      Direction& d = wp->get_d();
+
+      if (!this->b->can_set_word(s, w, h, d)) {
+        cout << "Error in WordGenerator!" << endl;
+        exit(EXIT_FAILURE);
+      }
+
+      bool choose = false;
+      while (!choose && res.compare("n") != 0) {
+        string res;
+        cout << "Would you like to play the word \"" << s
+             << "\" at position (" << to_string(w + 1)
+             << ", " << char(h + 'A') << ") (Score: "
+             << wp->get_score() << ") [Y/n]:\t";
+        cin >> res;
+        choose = res.compare("Y") == 0;
+      }
+
+      if (choose) {
+        this->b->set_word(s, w, h, d);
+        return;
+      }
+    }
   }
 }
 
@@ -227,7 +249,7 @@ bool Game::valid_word_for_game(string& input) {
 
   // Checks for word in dictionary
   auto it = this->wordlist->find(input);
-  return it == this->wordlist->end();
+  return it != this->wordlist->end();
 }
 
 void Game::get_wordlist(string& filename, unordered_set<string >& set_) {

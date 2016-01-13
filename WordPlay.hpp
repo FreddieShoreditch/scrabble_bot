@@ -20,7 +20,8 @@ class WordPlay {
     int& get_w(void);
     int& get_h(void);
     int& get_score(void);
-    Direction get_d(void);
+    Direction& get_d(void);
+    string& get_word(void);
 
 };
 
