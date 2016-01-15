@@ -17,10 +17,12 @@ class WordGenerator {
 
   private:
     unordered_set<CharacterInput* >& input;
-    vector<WordPlay* >& out;
+    unordered_set<WordPlay* >* input_perms;
+    priority_queue<WordPlay* >& out;
+    void CalculatePermutations(void);
 
   public:
-    WordGenerator(unordered_set<CharacterInput* >& characters, vector<WordPlay* >& results);
+    WordGenerator(unordered_set<CharacterInput* >& characters, priority_queue<WordPlay* >& results);
     void Generator(void);
 
 };

@@ -1,6 +1,6 @@
 #include "WordGenerator.hpp"
 
-WordGenerator::WordGenerator(unordered_set<CharacterInput* >& characters, vector<WordPlay* >& results)
+WordGenerator::WordGenerator(unordered_set<CharacterInput* >& characters, priority_queue<WordPlay* >& results)
   : input(characters), out(results) {}
 
 void WordGenerator::Generator(void) {
@@ -15,7 +15,7 @@ void WordGenerator::Generator(void) {
 
   // Always insert the possibility of passing.
   wp = new WordPlay(s, w, h, d, score);
-  this->out.push_back(wp);
+  this->out.push(wp);
 
   cout << "Number of tiles:\t" << this->input.size() << endl;
   cout << "Number of possible WordPlays:\t" << this->out.size() << endl << endl;
