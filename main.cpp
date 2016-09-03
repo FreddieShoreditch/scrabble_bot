@@ -12,11 +12,6 @@ int main(int argc, char** argv) {
     switch (c) {
       case 'b':
         opts.board_config = opt;
-        if (opt.compare("Scrabble") == 0) {
-          opts.board_config = "./board_configs/hasbro_scrabble.json";
-        } else if (opt.compare("WordsWFriends") == 0) {
-          opts.board_config = "./board_configs/words_with_friends.json";
-        }
         opts.set_board_config = true;
         break;
       case 'p':

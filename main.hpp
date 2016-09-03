@@ -48,6 +48,12 @@ typedef struct {
       print_error("No board config set. Please set a board configuration.");
       usage();
     } else {
+      if (this->board_config.compare("Scrabble") == 0) {
+        this->board_config = "./board_configs/hasbro_scrabble.json";
+      } else if (this->board_config.compare("WordsWFriends") == 0) {
+        this->board_config = "./board_configs/words_with_friends.json";
+      }
+
       ifstream file(this->board_config);
       if (!file) {
         valid = false;
