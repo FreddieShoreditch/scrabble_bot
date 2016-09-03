@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
       case 'l':
         if (opt.compare("en_GB") == 0 || opt.compare("en") == 0 ||
             opt.compare("English") == 0 || opt.compare("english") == 0) {
+          // Default is English
           continue;
         } else {
           print_error("Language given is not known. Please try again.");
@@ -38,7 +39,7 @@ int main(int argc, char** argv) {
     }
   }
 
-  if (!check_options(opts)) {
+  if (!opts.validate()) {
     usage();
   }
 
@@ -64,14 +65,6 @@ void print_error(string err) {
     errors = true;
   }
   cout << "\t" << err << endl;
-}
-
-bool check_options(options o) {
-  bool valid = true;
-
-  valid &= !o.board_config.empty() || !o.players || !o.this_player_go;
-
-  return valid;
 }
 
 bool check_file_exists(string s, bool print_err) {

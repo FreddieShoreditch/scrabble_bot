@@ -14,16 +14,34 @@
 using namespace std;
 
 typedef struct {
+  // Configuration to use for the game, in JSON
   string board_config;
-  string game_played;
+
+  // The wordlist to use for validating wordplays
   string language_file;
+
+  // Number of players playing and which go you are
   int players;
   int this_player_go;
 
+  // Initialisation of options for defaults
   void init(void) {
     this->players = 2;
     this->this_player_go = 1;
     this->language_file = "./submodules/wordlists_en_mozilla/en_GB (Marco Pinto) - 2.32 - 2016-01-01/wordlist_marcoagpinto_20160101_153347w.txt";
+  }
+
+  // Validate options
+  bool validate(void) {
+    bool valid = true;
+
+    // Must have a board config and player options
+    valid &= !this->board_config.empty() || !this->players || !this->this_player_go;
+
+    // Must have a language file / wordlist
+    valid &= !this->language_file.empty();
+
+    return valid;
   }
 } options;
 
