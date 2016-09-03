@@ -19,6 +19,12 @@ typedef struct {
   string language_file;
   int players;
   int this_player_go;
+
+  void init(void) {
+    this->players = 2;
+    this->this_player_go = 1;
+    this->language_file = "./submodules/wordlists_en_mozilla/en_GB (Marco Pinto) - 2.32 - 2016-01-01/wordlist_marcoagpinto_20160101_153347w.txt";
+  }
 } options;
 
 // Created Libraries
