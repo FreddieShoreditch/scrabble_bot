@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
         if (opt.compare("en_GB") == 0 || opt.compare("en") == 0 ||
             opt.compare("English") == 0 || opt.compare("english") == 0) {
           // Default is English
-          continue;
           opts.set_language_file = true;
+          continue;
         } else {
           print_error("Language given is not known. Please try again.");
         }

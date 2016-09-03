@@ -56,9 +56,13 @@ typedef struct {
     }
 
     // Must have players and what player you are
-    bool players_valid = !this->players || !this->this_player_go;
+    bool players_valid =  this->players != -1 &&
+                          this->this_player_go > 0 &&
+                          this->this_player_go <= this->players;
     valid &= players_valid;
     if (!players_valid) {
+      print_error("Players:\t" + to_string(this->players));
+      print_error("Player Go:\t" + to_string(this->this_player_go));
       print_error("You must set number of players and which player you are.");
       usage();
     }
