@@ -1,5 +1,5 @@
 CC = g++
-CCOPT = -Wall -Werror -pedantic -std=c++11
+CCOPT = -Wall -pedantic -std=c++11
 RM = rm -rf
 
 all: main

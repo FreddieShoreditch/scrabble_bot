@@ -1,6 +1,6 @@
 #include "BoardMarker.hpp"
 
-BoardMarker::BoardMarker (void) : m(NONE), c(' ') {}
+BoardMarker::BoardMarker (void) : m(NONE), c(NULL) {}
 
 bool BoardMarker::apply_modifier(Modifier& m) {
   if (this->m != NONE) {
@@ -11,7 +11,7 @@ bool BoardMarker::apply_modifier(Modifier& m) {
 }
 
 bool BoardMarker::set_char(char& c) {
-  if (this->c != ' ') {
+  if (this->c) {
     return this->c == c;
   }
   this->c = toupper(c);
@@ -50,5 +50,6 @@ void BoardMarker::print_marker(void) {
     post = "\033[0m";
   }
 
-  cout << pre << col << " " << this->c << " " << post;
+  char c = (this->c) ? this->c : ' ';
+  cout << pre << col << " " << c << " " << post;
 }
