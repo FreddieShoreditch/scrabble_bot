@@ -15,6 +15,7 @@ using namespace std;
 
 void print_error(string err);
 void usage(void);
+bool check_file_exists(string s, bool print_err = false);
 
 typedef struct {
   // Configuration to use for the game, in JSON
@@ -68,8 +69,5 @@ typedef struct {
 
 // Created Libraries
 #include "Game.hpp"
-
-bool check_options(options o);
-bool check_file_exists(string s, bool print_err = false);
 
 #endif
