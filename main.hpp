@@ -13,6 +13,9 @@
 
 using namespace std;
 
+void print_error(string err);
+void usage(void);
+
 typedef struct {
   // Configuration to use for the game, in JSON
   string board_config;
@@ -35,11 +38,29 @@ typedef struct {
   bool validate(void) {
     bool valid = true;
 
-    // Must have a board config and player options
-    valid &= !this->board_config.empty() || !this->players || !this->this_player_go;
+    // Must have a board config
+    bool board_config_valid = !this->board_config.empty();
+    valid &= board_config_valid;
+    if (!board_config_valid) {
+      print_error("No board config set. Please set a board configuration.");
+      usage();
+    }
+
+    // Must have players and what player you are
+    bool players_valid = !this->players || !this->this_player_go;
+    valid &= players_valid;
+    if (!players_valid) {
+      print_error("You must set number of players and which player you are.");
+      usage();
+    }
 
     // Must have a language file / wordlist
-    valid &= !this->language_file.empty();
+    bool language_file_valid = !this->language_file.empty();
+    valid &= language_file_valid;
+    if (!language_file_valid) {
+      print_error("No wordlist set. You must set a wordlist to use.");
+      usage();
+    }
 
     return valid;
   }
@@ -48,8 +69,6 @@ typedef struct {
 // Created Libraries
 #include "Game.hpp"
 
-void print_error(string err);
-void usage(void);
 bool check_options(options o);
 bool check_file_exists(string s, bool print_err = false);
 
