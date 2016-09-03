@@ -15,18 +15,20 @@ using namespace std;
 
 void print_error(string err);
 void usage(void);
-bool check_file_exists(string s, bool print_err = false);
 
 typedef struct {
   // Configuration to use for the game, in JSON
   string board_config;
+  bool set_board_config;
 
   // The wordlist to use for validating wordplays
   string language_file;
+  bool set_language_file;
 
   // Number of players playing and which go you are
   int players;
   int this_player_go;
+  bool set_players;
 
   // Initialisation of options for defaults
   void init(void) {
@@ -45,6 +47,12 @@ typedef struct {
     if (!board_config_valid) {
       print_error("No board config set. Please set a board configuration.");
       usage();
+    } else {
+      ifstream file(this->board_config);
+      if (!file) {
+        valid = false;
+        print_error("Config file doesn't exist at " + this->board_config);
+      }
     }
 
     // Must have players and what player you are

@@ -17,12 +17,15 @@ int main(int argc, char** argv) {
         } else if (opt.compare("WordsWFriends") == 0) {
           opts.board_config = "./board_configs/words_with_friends.json";
         }
+        opts.set_board_config = true;
         break;
       case 'p':
         opts.players = stoi(opt);
+        opts.set_players = true;
         break;
       case 'o':
         opts.this_player_go = stoi(opt);
+        opts.set_players = true;
         break;
       case 'h':
         usage();
@@ -33,22 +36,14 @@ int main(int argc, char** argv) {
             opt.compare("English") == 0 || opt.compare("english") == 0) {
           // Default is English
           continue;
+          opts.set_language_file = true;
         } else {
           print_error("Language given is not known. Please try again.");
         }
     }
   }
 
-  if (!opts.validate()) {
-    usage();
-  }
-
-  if (!check_file_exists(opts.board_config, true)) {
-    exit(EXIT_FAILURE);
-  };
-
-  // Print configuration
-  if (errors) { exit(EXIT_FAILURE); }
+  if (!opts.validate()) { exit(EXIT_FAILURE); }
 
   // Continue with game
   cout << "Starting scrabble bot!..." << endl << endl;
@@ -56,7 +51,6 @@ int main(int argc, char** argv) {
   new Game(opts);
 
   return 0;
-
 }
 
 void print_error(string err) {
@@ -65,15 +59,6 @@ void print_error(string err) {
     errors = true;
   }
   cout << "\t" << err << endl;
-}
-
-bool check_file_exists(string s, bool print_err) {
-  ifstream file(s);
-  bool exists_ = (!file) ? false : true;
-  if (!exists_ && print_err) {
-    print_error("Config file doesn't exist!");
-  }
-  return exists_;
 }
 
 void usage(void) {
