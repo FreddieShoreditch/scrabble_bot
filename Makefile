@@ -2,9 +2,9 @@ CC = g++
 CCOPT = -Wall -pedantic -std=c++11
 RM = rm -rf
 
-all: main
+all: ScrabbleBot
 
-main: main.o \
+ScrabbleBot: main.o \
 	Game.o Board.o BoardMarker.o Direction.o \
 	CharacterInput.o Modifier.o WordGenerator.o \
 	WordPlay.o
@@ -14,6 +14,6 @@ main: main.o \
 	$(CC) $(CCOPT) -c $< -o $@
 
 clean:
-	$(RM) main *.o *.hpp.gch
+	$(RM) ScrabbleBot *.o *.hpp.gch
 
 .PHONY: all clean
