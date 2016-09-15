@@ -1,6 +1,6 @@
 #include "BoardMarker.hpp"
 
-BoardMarker::BoardMarker (void) : m(NONE), c(NULL) {}
+BoardMarker::BoardMarker (void) : m(NONE), c('\0') {}
 
 bool BoardMarker::apply_modifier(Modifier& m) {
   if (this->m != NONE) {
