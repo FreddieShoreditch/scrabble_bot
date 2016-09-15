@@ -216,8 +216,8 @@ void Game::player_go(void) {
       cout << "Please try again..." << endl;
     }
 
-    unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
-    WordGenerator wgen(input, *words);
+    set<WordPlay*, wordplay_compare >* words = new set<WordPlay*, wordplay_compare >();
+    WordGenerator wgen(input, *(this->b), *words);
     wgen.Generator();
 
     string res;

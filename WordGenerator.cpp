@@ -1,11 +1,11 @@
 #include "WordGenerator.hpp"
 
-WordGenerator::WordGenerator(unordered_set<CharacterInput* >& characters, unordered_set<WordPlay* >& results)
-  : input(characters), out(results) {}
+// Intended to generate all possible WordPlays at any given position
+
+WordGenerator::WordGenerator(unordered_set<CharacterInput* >& characters, Board& board, set<WordPlay*, wordplay_compare >& results)
+  : input(characters), out(results), b(board) {}
 
 void WordGenerator::Generator(void) {
-  cout << "Generating word plays..." << endl;
-
   WordPlay* wp;
   string s = "-";
   int w = -1;
@@ -17,7 +17,8 @@ void WordGenerator::Generator(void) {
     wp = new WordPlay(s, w, h, d, score);
     this->out.insert(wp);
   } while (false);
+}
 
-  cout << "Number of tiles:\t" << this->input.size() << endl;
-  cout << "Number of possible WordPlays:\t" << this->out.size() << endl << endl;
+void generate_at_position(int x, int y) {
+  
 }
