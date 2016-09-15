@@ -15,8 +15,6 @@ Game::Game(options o) : players(o.players), this_player_go(o.this_player_go) {
   cout << "Your Go:\t\t" << this->this_player_go << endl;
   cout << endl;
 
-  assert(o.players > 0 && o.this_player_go > 0 && o.this_player_go <= o.players);
-
   // Game logic
   int go = 0;
   while (!this->is_end()) {
@@ -76,6 +74,8 @@ rapidjson::Document get_config_from_file(string& config) {
 }
 
 bool Game::is_end(void) {
+  // TODO: What if players are unable to make a move?
+
   return this->tiles_left == 0;
 }
 
@@ -130,7 +130,6 @@ void Game::opponent_go(void) {
       }
 
       cin >> input;
-      cout << input << endl;
       if (!regex_match(input, y_)) {
         continue;
       }
@@ -191,18 +190,30 @@ void Game::player_go(void) {
     }
 
     // Get the tiles
+    char confirm;
     if (tiles_available > 0) {
       cout << "Please enter the tiles you have left, separated by a space (use '-' for blank):\t";
-      char c;
+      char c = '0';
       CharacterInput* ci;
       for (int i = 0; i < tiles_available; i++) {
-        while (c < 'A' && c > 'Z' && c != '-') {
+        while ((c < 'A' || c > 'Z') && c != '-') {
           cin >> c;
+          c = toupper(c);
         }
         int char_score = (c != '-') ? this->b->get_score_for_char(c) : 0;
         ci = new CharacterInput(c, char_score);
         input.insert(ci);
+        c = '0';
       }
+
+      cout << "Are these your current tiles [Y/n]:\t";
+      for (auto& ci : input) { cout << ci->get_char() << " "; }
+      cout << endl;
+      cin >> confirm;
+      confirm = tolower(confirm);
+      if (confirm == 'y') break;
+
+      cout << "Please try again..." << endl;
     }
 
     unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
@@ -279,6 +290,7 @@ void Game::get_wordlist(string& filename, unordered_set<string >& set_) {
     word = word.substr(0, index);
 
     if (regex_match(word, e)) {
+      for (char& c : word) { c = toupper(c); }
       set_.insert(word);
     }
   }

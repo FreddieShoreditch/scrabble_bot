@@ -76,7 +76,7 @@ bool Board::can_set_word(string s, int w, int h, Direction d) {
   // Check that nothing, or the character intended is in place
   for (size_t i = 0; i < s.length(); i++) {
     char current = this->get_char(w + (i * longitude), h + (i * latitude));
-    if (current != ' ' && s[i] != current) { return false; }
+    if (current != '\0' && s[i] != current) { return false; }
   }
   return true;
 }
