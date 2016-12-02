@@ -216,13 +216,14 @@ void Game::player_go(void) {
       cout << "Please try again..." << endl;
     }
 
-    unordered_set<WordPlay* >* words = new unordered_set<WordPlay* >();
+    auto words = new priority_queue<WordPlay* >();
     WordGenerator wgen(input, *words);
     wgen.Generator();
 
     string res;
     bool cancel = false;
-    for (auto& wp : *words) {
+    WordPlay* wp = words->top(); // Must be at least one play
+    while (wp) {
       string& s = wp->get_word();
       int& w = wp->get_w();
       int& h = wp->get_h();
@@ -250,6 +251,9 @@ void Game::player_go(void) {
           this->b->set_word(s, w, h, d);
           return;
         }
+
+        words->pop();
+        wp = words->top();
       }
     }
   }

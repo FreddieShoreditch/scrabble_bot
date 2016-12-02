@@ -3,6 +3,7 @@
 #define GAME_H
 
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <regex>
 #include <unordered_set>
